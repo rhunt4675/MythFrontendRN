@@ -7,10 +7,8 @@ import {
   Linking,
   View,
 } from 'react-native';
-import { 
-  Video,
-  IntentLauncherAndroid,
-} from 'expo';
+import * as IntentLauncherAndroid from 'expo-intent-launcher';
+import { Video } from 'expo-av';
 import VideoPlayer from '@expo/videoplayer';
 
 export default class RecordedDetailScreen extends React.Component {

@@ -83,8 +83,6 @@ export class RecordingCard extends React.Component {
 }
 
 const bannerImageWidth = Math.round(Dimensions.WindowSize.width / 3);
-const bannerImageHeight = Math.round(bannerImageHeight * 9 / 16);
-
 const styles = StyleSheet.create({
   surface: {
     elevation: 3,
@@ -95,7 +93,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   image: {
-    height: bannerImageHeight,
     width: bannerImageWidth,
     borderBottomLeftRadius: 5,
     borderTopLeftRadius: 5,

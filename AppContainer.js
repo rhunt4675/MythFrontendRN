@@ -1,4 +1,6 @@
 import React from 'react';
+// Fixes lazy loading bug: https://github.com/kmagiera/react-native-gesture-handler/issues/320
+import 'react-native-gesture-handler'
 import { 
   createAppContainer, 
   createSwitchNavigator,

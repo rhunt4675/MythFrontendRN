@@ -14,7 +14,7 @@ import {
   Surface,
   Title,
 } from 'react-native-paper';
-// import { IntentLauncherAndroid as IntentLauncher } from 'expo';
+import * as IntentLauncher from 'expo-intent-launcher';
 import Dimensions from '../../constants/Layout';
 
 export default class RecordedDetailScreen extends React.Component {
@@ -25,7 +25,6 @@ export default class RecordedDetailScreen extends React.Component {
   
   constructor(props) {
     super(props);
-    // console.log(IntentLauncherAndroid.startActivityAsync.toString());
   };
 
   _getRuntimeString() {
