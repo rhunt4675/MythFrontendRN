@@ -14,7 +14,7 @@ import {
   Surface,
   Title,
 } from 'react-native-paper';
-import { IntentLauncherAndroid } from 'expo';
+// import { IntentLauncherAndroid as IntentLauncher } from 'expo';
 import Dimensions from '../../constants/Layout';
 
 export default class RecordedDetailScreen extends React.Component {
@@ -25,7 +25,7 @@ export default class RecordedDetailScreen extends React.Component {
   
   constructor(props) {
     super(props);
-    console.log(IntentLauncherAndroid.startActivityAsync.toString());
+    // console.log(IntentLauncherAndroid.startActivityAsync.toString());
   };
 
   _getRuntimeString() {
@@ -60,7 +60,8 @@ export default class RecordedDetailScreen extends React.Component {
   render() {
     const recording = this.props.navigation.getParam('recording');
     const previewURI = this.props.screenProps.backendAddr + '/Content/GetPreviewImage?RecordedId=' + recording.Recording.RecordedId;
-    const coverURI = this.props.screenProps.backendAddr + '/Content/GetRecordingArtwork?Type=coverart&Inetref=' + recording.Inetref;
+    const coverURI = this.props.screenProps.backendAddr + '/Content/GetRecordingArtwork?Type=coverart&Inetref=' + recording.Inetref + '&Season='+ recording.Season;
+    const videoURI = this.props.screenProps.backendAddr + '/Content/GetRecording?RecordedId=' + recording.Recording.RecordedId;
 
     return (
       <View style={styles.flex}>
@@ -76,7 +77,11 @@ export default class RecordedDetailScreen extends React.Component {
               <View style={styles.flex}>
                 <View style={styles.row}>
                   <View style={styles.flex} />
-                  <FAB style={styles.fab} icon='play-arrow' />
+                  <FAB
+                    style={styles.fab} 
+                    icon='play-arrow'
+                    onPress={() => IntentLauncher.startActivityAsync('android.intent.action.VIEW', 
+                      {type: 'video/*', data: videoURI, category: 'android.intent.category.DEFAULT'})} />
                 </View>
                 <Title numberOfLines={1}>{recording.Title}</Title>
                 <Paragraph numberOfLines={2}>{this._getSubTitleString()}</Paragraph>
@@ -162,7 +167,7 @@ const styles = StyleSheet.create({
   },
   body: {
     marginHorizontal: fabRadius,
-    marginVertical: 10,
+    marginTop: 10,
   },
   bold: {
     fontWeight: 'bold',

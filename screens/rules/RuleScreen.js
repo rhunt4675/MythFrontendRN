@@ -84,7 +84,9 @@ export default class RulesScreen extends React.Component {
   );
 
   _onRulePressed(rule) {
-    this.props.navigation.push('RuleDetail', {'rule': rule});
+    requestAnimationFrame(
+      () => this.props.navigation.push('RuleDetail', {'rule': rule})
+    );
   }
 }
 

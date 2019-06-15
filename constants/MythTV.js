@@ -1,5 +1,5 @@
 // Taken from https://github.com/MythTV/mythtv/blob/36a1ff5a6fdefe4da0e4c39c6605ddb87611baea/mythtv/html/tv/js/constants.js
-const MythTVRecStatusMap = {
+const RecStatusMap = {
   '-15': {Name: 'Pending', Color: 'green', Active: true},
   '-14': {Name: 'Failing', Color: 'red', Active: false},
   '-13': {Name: 'Other Recording', Color: 'yellow', Active: false},     // Deprecated , Active: false
@@ -30,4 +30,31 @@ const MythTVRecStatusMap = {
   '12' : {Name: 'Recorder Off-Line', Color: 'red', Active: false},
 };
 
-export default MythTVRecStatusMap;
+const RecTypes = [
+  'Not Recording',
+  'Single Record',
+  'Record One',
+  'Record All',
+  'Record Daily',
+  'Record Weekly',
+  'Override Recording',
+  'Do not Record',
+  'Recording Template',
+];
+
+const DupMethods = [
+  'None',
+  'Subtitle',
+  'Description',
+  'Subtitle and Description',
+  'Subtitle then Description',
+];
+
+const DupIn = [
+  'Current Recordings',
+  'Previous Recordings',
+  'All Recordings',
+  'New Episodes Only',
+];
+
+export { RecStatusMap, RecTypes, DupMethods, DupIn };

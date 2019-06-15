@@ -1,7 +1,9 @@
 import React from 'react';
 import moment from 'moment';
 import Dimensions from '../../constants/Layout';
-import MythTVRecStatusMap from '../../constants/MythTV';
+import {
+  RecStatusMap
+} from '../../constants/MythTV';
 import {
   Image,
   StyleSheet,
@@ -38,17 +40,17 @@ export class UpcomingCard extends React.Component {
 
     var dynamicStyles = {
       timelineDot: {
-        backgroundColor: MythTVRecStatusMap[recordingStatus].Color,
+        backgroundColor: RecStatusMap[recordingStatus].Color,
       },
       surface: {
-        backgroundColor: MythTVRecStatusMap[recordingStatus].Active ? 'white' : 'rgba(200, 200, 200, 0.8)',
-        elevation: MythTVRecStatusMap[recordingStatus].Active ? 3 : 0,
+        backgroundColor: RecStatusMap[recordingStatus].Active ? 'white' : 'rgba(200, 200, 200, 0.8)',
+        elevation: RecStatusMap[recordingStatus].Active ? 3 : 0,
       },
       image: {
-        opacity: MythTVRecStatusMap[recordingStatus].Active ? 1 : 0.4,
+        opacity: RecStatusMap[recordingStatus].Active ? 1 : 0.4,
       },
       text: {
-        color: MythTVRecStatusMap[recordingStatus].Active ? 'black' : 'gray',
+        color: RecStatusMap[recordingStatus].Active ? 'black' : 'gray',
       }
     }
 
@@ -63,7 +65,7 @@ export class UpcomingCard extends React.Component {
           <View style={[styles.flex, styles.row]}>
             <Text style={[styles.timeText, styles.flex]} numberOfLines={1}>{this._getUpcomingTimeString()}</Text>
             <View style={styles.horizontalSpacer} />
-            <Text style={styles.statusText} numberOfLines={1}>{MythTVRecStatusMap[recordingStatus].Name}</Text>
+            <Text style={styles.statusText} numberOfLines={1}>{RecStatusMap[recordingStatus].Name}</Text>
           </View>
           <Surface style={[styles.surface, dynamicStyles.surface]}>
             <View>

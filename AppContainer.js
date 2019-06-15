@@ -3,9 +3,12 @@ import {
   createAppContainer, 
   createSwitchNavigator,
   createStackNavigator, 
-  createBottomTabNavigator,
+  createDrawerNavigator,
 } from 'react-navigation';
 import Settings from './storage/Settings';
+
+import { TouchableRipple } from 'react-native-paper';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import TitleScreen from './screens/recordings/TitleScreen';
 import RecordedScreen from './screens/recordings/RecordedScreen';
@@ -15,6 +18,7 @@ import UpcomingScreen from './screens/upcoming/UpcomingScreen';
 import StatusScreen from './screens/status/StatusScreen';
 import RuleScreen from './screens/rules/RuleScreen';
 import RuleDetailScreen from './screens/rules/RuleDetailScreen';
+import RuleEditScreen from './screens/rules/RuleEditScreen';
 import SettingsScreen from './screens/SettingsScreen';
 
 export default class AppContainer extends React.Component {
@@ -45,46 +49,80 @@ export default class AppContainer extends React.Component {
   }
 
   render() {
+    const navigationHamburger = ({ navigation }, extras = {}) => ({
+      headerLeft:
+        <TouchableRipple
+            borderless
+            rippleColor='rgba(0, 0, 0, .32)'
+            underlayColor='rgba(0, 0, 0, .32)'
+            onPress={() => requestAnimationFrame(() => navigation.toggleDrawer())}>
+          <MaterialIcons name="menu" size={25} />
+        </TouchableRipple>,
+      headerLeftContainerStyle: {
+        margin: 13
+      },
+      ...extras,
+    });
+
     const RecordingStack = createStackNavigator({
-      Title: TitleScreen,
+      Title: {
+        screen: TitleScreen,
+        navigationOptions: navigationHamburger,
+      },
       Recorded: RecordedScreen,
       Detail: RecordedDetailScreen,
     });
     
     const RecentStack = createStackNavigator({
-      Recent: RecentScreen,
+      Recent: {
+        screen: RecentScreen,
+        navigationOptions: navigationHamburger,
+      },
       Detail: RecordedDetailScreen,
     });
 
     const UpcomingStack = createStackNavigator({
-      Upcoming: UpcomingScreen,
+      Upcoming: {
+        screen: UpcomingScreen,
+        navigationOptions: navigationHamburger,
+      },
     });
 
     const RuleStack = createStackNavigator({
-      Rule: RuleScreen,
+      Rule: {
+        screen: RuleScreen,
+        navigationOptions: navigationHamburger,
+      },
       RuleDetail: RuleDetailScreen,
+      RuleEdit: RuleEditScreen,
     });
 
     const StatusStack = createStackNavigator({
-      Status: StatusScreen,
+      Status: {
+        screen: StatusScreen,
+        navigationOptions: navigationHamburger,
+      },
     });
     
     const SettingsStack = createStackNavigator({
       Settings: {
         screen: props => <SettingsScreen {...props} onBackendAddrChanged={this._onBackendAddrChanged} />,
-        navigationOptions: {title: 'Settings'},
+        navigationOptions: config => navigationHamburger(config, extras = {title: 'Settings'}),
       },
     });
 
-    RecordingStack.navigationOptions = {tabBarLabel: 'Recordings'};
-    RecentStack.navigationOptions = {tabBarLabel: 'Recent'};
-    UpcomingStack.navigationOptions = {tabBarLabel: 'Upcoming'};
-    RuleStack.navigationOptions = {tabBarLabel: 'Rules'};
-    StatusStack.navigationOptions = {tabBarLabel: 'Status'};
-    SettingsStack.navigationOptions = {tabBarLabel: 'Settings'};
-
-    const TabNavigator = createBottomTabNavigator({RecordingStack, RecentStack, UpcomingStack, RuleStack, StatusStack, SettingsStack});
-    const AppContainer = createAppContainer(TabNavigator);
+    const DrawerNavigator = createDrawerNavigator({
+      'Recordings': RecordingStack,
+      'Recent Recordings': RecentStack,
+      'Upcoming Recordings': UpcomingStack,
+      'Recording Rules': RuleStack,
+      'Backend Status': StatusStack,
+      'Settings': SettingsStack,
+    },{
+      drawerType: 'slide',
+      backBehavior: false,
+    });
+    const AppContainer = createAppContainer(DrawerNavigator);
 
     return <AppContainer screenProps={{...this.state}} />;
   }

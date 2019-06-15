@@ -126,7 +126,9 @@ export default class RecentScreen extends React.Component {
   );
 
   _onRecordingPressed(recording) {
-    this.props.navigation.push('Detail', {'recording': recording});
+    requestAnimationFrame(
+      () => this.props.navigation.push('Detail', {'recording': recording})
+    );
   }
 }
 

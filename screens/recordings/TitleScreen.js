@@ -109,7 +109,9 @@ export default class TitleScreen extends React.Component {
   );
 
   _onTitlePressed(title) {
-    this.props.navigation.push('Recorded', {'title': title});
+    requestAnimationFrame(
+      () => this.props.navigation.push('Recorded', {'title': title})
+    );
   }
 }
 
