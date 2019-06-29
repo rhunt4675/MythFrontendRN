@@ -63,12 +63,12 @@ export default class RecordedDetailScreen extends React.Component {
     const videoURI = this.props.screenProps.backendAddr + '/Content/GetRecording?RecordedId=' + recording.Recording.RecordedId;
 
     return (
-      <View style={styles.flex}>
-        <View style={styles.noScrollBox}>
+      <ScrollView style={styles.flex}>
+        <View style={styles.header}>
           <ImageBackground style={styles.backgroundImage}
             source={{uri: previewURI}}>
             <View style={styles.backgroundImageSpacer} />
-            <View style={[styles.header, styles.row]}>
+            <View style={[styles.imageHeader, styles.row]}>
               <Surface style={styles.coverSurface}>
                 <Image style={styles.coverImage}
                   source={{uri: coverURI}} />
@@ -88,7 +88,7 @@ export default class RecordedDetailScreen extends React.Component {
             </View>
           </ImageBackground>
         </View>
-        <ScrollView style={styles.body}>
+        <View style={styles.body}>
           <Paragraph>
             <Text style={styles.bold}>Description: </Text>
             {recording.Description}
@@ -116,8 +116,8 @@ export default class RecordedDetailScreen extends React.Component {
             </View>
           </View>
           <Text>{JSON.stringify(recording)}</Text>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
   },
-  noScrollBox: {
+  header: {
     width: '100%',
     height: previewImageHeight + coverImageHeight - fabRadius,
   },
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   backgroundImageSpacer: {
     height: previewImageHeight - fabRadius,
   },
-  header: {
+  imageHeader: {
     paddingHorizontal: fabRadius,
     maxHeight: coverImageHeight + (2 * previewBorder),
   },
