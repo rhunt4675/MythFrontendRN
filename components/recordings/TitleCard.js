@@ -12,16 +12,24 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 
+// Aspect Ratio according to https://kodi.wiki/view/TV-Show_artwork#Banner
+const BANNER_WIDTH = '100%';
+const BANNER_HEIGHT = Math.round(Dimensions.WindowSize.width * 37 / 200);
+
 export class TitleCard extends React.Component {
   constructor(props) {
     super(props);
     this._onPress = this._onPress.bind(this);
-  }
 
+    this.state = {
+      bannerHeight: BANNER_HEIGHT,
+      bannerWidth: BANNER_WIDTH,
+    }
+  }
   _onPress() {
     this.props.onTitlePressed(this.props.name);
   }
-  
+
   render() {
     const bannerURI = this.props.screenProps.backendAddr + '/Content/GetRecordingArtwork?Type=banner&Inetref=' + this.props.inetref;
 
@@ -29,8 +37,10 @@ export class TitleCard extends React.Component {
       <Surface style={styles.surface}>
         <TouchableRipple onPress={this._onPress}>
           <View>
-            <Image style={styles.image} 
+            <Image
+              style={{...styles.image, height: this.state.bannerHeight, width: this.state.bannerWidth}}
               resizeMode='cover' 
+              onError={() => this.setState({bannerHeight: undefined, bannerWidth: undefined})}
               source={{uri: bannerURI}} />
             <Title style={styles.title} numberOfLines={1}>{this.props.name}</Title>
           </View>
@@ -40,17 +50,12 @@ export class TitleCard extends React.Component {
   }
 }
 
-// Aspect Ratio according to https://kodi.wiki/view/TV-Show_artwork#Banner
-const bannerImageHeight = Math.round(Dimensions.WindowSize.width * 37 / 200);
-
 const styles = StyleSheet.create({
   surface: {
     elevation: 3,
     borderRadius: 5,
   },
   image: {
-    width: '100%',
-    height: bannerImageHeight,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
   },

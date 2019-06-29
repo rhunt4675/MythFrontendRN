@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
   fab: {
     borderWidth: 1.5,
     borderColor: '#ffffff',
+    backgroundColor: '#3498db',
   },
   body: {
     marginHorizontal: fabRadius,
