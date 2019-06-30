@@ -14,6 +14,7 @@ import {
 import {
   Button,
   Checkbox,
+  Dialog,
   Headline,
   List,
   Modal,
@@ -65,9 +66,9 @@ export default class RuleEditScreen extends React.Component {
   _updateRule(path, newValue) {
     this.setState((state, props) => {
       let newRule = {...state.rule};
-      [childPath, ...parentPath] = path.reverse();
-      var parent = this._jsonIdx(newRule, parentPath.reverse());
-      parent[childPath] = newValue;
+      [key, ...parentPathReversed] = path.reverse();
+      var parent = this._jsonIdx(newRule, parentPathReversed.reverse());
+      parent[key] = newValue;
 
       return {rule: newRule};
     });
@@ -76,21 +77,25 @@ export default class RuleEditScreen extends React.Component {
   render() {
     const rule = this.state.rule;
 
-    const modalChange = selectedItem => {this._updateRule(this.state.modal.jsonPath, selectedItem); this._closeRadioButtonModal()};
-    const modalValue = this.state.modal && this._jsonIdx(rule, this.state.modal.jsonPath);
-    let modal = this.state.modal &&
+    const modalChange = selectedItem => this._updateRule(this.state.modal.jsonPath, selectedItem);
+    const modalSelectedValue = this.state.modal && this._jsonIdx(rule, this.state.modal.jsonPath);
+    let modal =
       <Portal>
-        <Modal visible onDismiss={this._closeRadioButtonModal}>
-          <View style={styles.modal}>
-            <Title>{this.state.modal.title}</Title>
-            <RadioButton.Group onValueChange={modalChange} value={modalValue}>
-              {this.state.modal.items.map(item => <View>
+        <Dialog visible={this.state.modal} onDismiss={this._closeRadioButtonModal}>
+          <Dialog.Title>{this.state.modal && this.state.modal.title}</Dialog.Title>
+          <Dialog.ScrollArea>
+            <RadioButton.Group onValueChange={modalChange} value={modalSelectedValue}>
+              {this.state.modal &&
+               this.state.modal.items.map(item => <View key={item} style={styles.row}>
                                                     <RadioButton value={item} />
                                                     <Text>{item}</Text>
                                                   </View>)}
             </RadioButton.Group>
-          </View>
-        </Modal>
+          </Dialog.ScrollArea>
+          <Dialog.Actions>
+            <Button onPress={this._closeRadioButtonModal}>Done</Button>
+          </Dialog.Actions>
+        </Dialog>
       </Portal>;
 
     return (
@@ -124,16 +129,36 @@ export default class RuleEditScreen extends React.Component {
           <List.Item title='Start Offset'
                      style={styles.listItem}
                      right={props =>  <View style={styles.rowGroup}>
-                                        <Button compact mode='outlined'><AntDesign size={15} name='plus' /></Button>
+                                        <Button
+                                          compact
+                                          mode='outlined'
+                                          onPress={() => this._updateRule(['StartOffset'], (parseInt(rule.StartOffset) + 1).toString())}>
+                                          <AntDesign size={15} name='plus' />
+                                        </Button>
                                         <Text style={styles.incDecTextSpacer}>{rule.StartOffset}</Text>
-                                        <Button compact mode='outlined'><AntDesign size={15} name='minus' /></Button>
+                                        <Button
+                                          compact
+                                          mode='outlined'
+                                          onPress={() => this._updateRule(['StartOffset'], (parseInt(rule.StartOffset) - 1).toString())}>
+                                          <AntDesign size={15} name='minus' />
+                                        </Button>
                                       </View>} />
           <List.Item title='End Offset'
                      style={styles.listItem}
                      right={props =>  <View style={styles.rowGroup}>
-                                        <Button compact mode='outlined'><AntDesign size={15} name='plus' /></Button>
+                                        <Button
+                                          compact
+                                          mode='outlined'
+                                          onPress={() => this._updateRule(['EndOffset'], (parseInt(rule.EndOffset) + 1).toString())}>
+                                          <AntDesign size={15} name='plus' />
+                                        </Button>
                                         <Text style={styles.incDecTextSpacer}>{rule.EndOffset}</Text>
-                                        <Button compact mode='outlined'><AntDesign size={15} name='minus' /></Button>
+                                        <Button
+                                          compact
+                                          mode='outlined'
+                                          onPress={() => this._updateRule(['EndOffset'], (parseInt(rule.EndOffset) - 1).toString())}>
+                                          <AntDesign size={15} name='minus' />
+                                        </Button>
                                       </View>} />
         </List.Section>
         <View style={styles.divider} />
@@ -141,16 +166,30 @@ export default class RuleEditScreen extends React.Component {
           <List.Subheader>Expiration</List.Subheader>
           <List.Item title='Auto-Expire Recordings'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoExpire'], rule.AutoExpire === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoExpire === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Expire Oldest First'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['MaxNewest'], rule.MaxNewest === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox disabled={rule.AutoExpire === 'false'} status={rule.MaxNewest === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Max Episodes'
                      style={styles.listItem}
                      right={props =>  <View style={styles.rowGroup}>
-                                        <Button compact disabled={rule.AutoExpire === 'false'} mode='contained'><AntDesign size={15} name='plus' /></Button>
+                                        <Button
+                                          compact
+                                          mode='outlined'
+                                          disabled={rule.AutoExpire === 'false'}
+                                          onPress={() => this._updateRule(['MaxEpisodes'], (parseInt(rule.MaxEpisodes) + 1).toString())}>
+                                          <AntDesign size={15} name='plus' />
+                                        </Button>
                                         <Text style={styles.incDecTextSpacer}>{rule.MaxEpisodes}</Text>
-                                        <Button compact disabled={rule.AutoExpire === 'false'} mode='contained'><AntDesign size={15} name='minus' /></Button>
+                                        <Button
+                                          compact
+                                          mode='outlined'
+                                          disabled={rule.AutoExpire === 'false'}
+                                          onPress={() => this._updateRule(['MaxEpisodes'], (parseInt(rule.MaxEpisodes) - 1).toString())}>
+                                          <AntDesign size={15} name='minus' />
+                                        </Button>
                                       </View>} />
         </List.Section>
         <View style={styles.divider} />
@@ -158,24 +197,31 @@ export default class RuleEditScreen extends React.Component {
           <List.Subheader>Post Processing</List.Subheader>
           <List.Item title='Auto-Commercial Flag'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoCommflag'], rule.AutoCommflag === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoCommflag === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Auto-Transcode'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoTranscode'], rule.AutoTranscode === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoTranscode === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Auto-Metadata Lookup'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoMetaLookup'], rule.AutoMetaLookup === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoMetaLookup === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Run User Job #1'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoUserJob1'], rule.AutoUserJob1 === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoUserJob1 === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Run User Job #2'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoUserJob2'], rule.AutoUserJob2 === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoUserJob2 === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Run User Job #3'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoUserJob3'], rule.AutoUserJob3 === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoUserJob3 === 'true' ? 'checked' : 'unchecked'} />} />
           <List.Item title='Run User Job #4'
                      style={styles.listItem}
+                     onPress={() => this._updateRule(['AutoUserJob4'], rule.AutoUserJob4 === 'false' ? 'true' : 'false')}
                      right={props => <Checkbox status={rule.AutoUserJob4 === 'true' ? 'checked' : 'unchecked'} />} />
         </List.Section>
         <View style={styles.divider} />
@@ -188,6 +234,10 @@ export default class RuleEditScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   listItem: {
     marginStart: 15,
   },
