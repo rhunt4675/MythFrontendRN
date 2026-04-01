@@ -13,7 +13,7 @@
   "dependencies": {
     "@expo/vector-icons": "^10.0.2",
     "buffer": "^5.2.1",
-    "expo": "^33.0.0",
+    "expo": "^48.0.0",
     "expo-asset": "^5.0.1",
     "expo-av": "^5.0.2",
     "expo-cli": "^2.20.0",
